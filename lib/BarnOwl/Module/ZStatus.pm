@@ -74,7 +74,13 @@ sub colorize {
     return '@<@color(' . $color . ")$text>";
 }
 
-BarnOwl::new_command(zstat => \&cmd_zstatus);
+BarnOwl::new_command(zstatus => \&cmd_zstatus, {
+    summary => "Zephyr a personal status dashboard",
+    usage   => "zstatus [zephyr command-line]",
+    description => "Asks you questions about your status, and zephyrs the \n" .
+    "result as a colored set of ASCII statusbars to the specified destination\n\n" .
+    "Use with a zephyr command line, e.g. :zstatus -c nelhage -i status"
+   });
 
 sub main_loop {
     if($next) {
