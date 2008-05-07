@@ -91,10 +91,4 @@ sub main_loop {
 
 $BarnOwl::Hooks::mainLoop->add(\&main_loop);
 
-=head1 SEE ALSO
-
-Foo, Bar, Baz
-
-=cut
-
 1;
