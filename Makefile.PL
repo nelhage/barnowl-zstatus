@@ -3,6 +3,6 @@ use warnings;
 
 use inc::Module::Install;
 
-barnowl_module('YAMLDump');
+barnowl_module('ZStatus');
 
 WriteAll;
