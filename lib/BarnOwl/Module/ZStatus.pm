@@ -21,6 +21,34 @@ sub cmd_zstatus {
     BarnOwl::start_question('Sleep-dep [0-10]? ', sub {got_sleep($args, @_)});
 }
 
+sub cmd_zbars {
+    my $cmd = shift;
+    my $args = join(" ", @_);
+    BarnOwl::start_question('foo=1;bar=2..? ', sub {got_data($args, @_)});
+}
+
+sub trim {
+    my $s = shift;
+    $s =~ s/^\s+//;
+    $s =~ s/\s+$//;
+    return $s;
+}
+
+sub got_data {
+    my ($args, $data) = @_;
+    my $message = "[Zephyr status dashboard]\n";
+
+    my @bars = split(/;/,$data);
+    for(@bars) {
+        next unless /=/;
+        my ($tag,$val)  = split('=',$_,2);
+        $tag = trim($tag);
+        $val = trim($val);
+        $message .= format_bar(sprintf('%15s',$tag), $val);
+    }
+    BarnOwl::zephyr_zwrite($args, $message);
+}
+
 sub got_sleep {
     my @pass = @_;
     $next = sub {
@@ -80,6 +108,11 @@ BarnOwl::new_command(zstatus => \&cmd_zstatus, {
     description => "Asks you questions about your status, and zephyrs the \n" .
     "result as a colored set of ASCII statusbars to the specified destination\n\n" .
     "Use with a zephyr command line, e.g. :zstatus -c nelhage -i status"
+   });
+
+BarnOwl::new_command(zbars => \&cmd_zbars, {
+    summary => "Zephyr an arbitrary personal status dashboard",
+    usage   => "zbars [zephyr command-line]",
    });
 
 sub main_loop {
