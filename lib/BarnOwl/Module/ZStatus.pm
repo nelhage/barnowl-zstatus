@@ -13,6 +13,8 @@ I didn't write this.
 
 package BarnOwl::Module::ZStatus;
 
+our $VERSION = 0.1;
+
 my $next = undef;
 
 sub cmd_zstatus {
