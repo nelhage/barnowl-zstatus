@@ -15,8 +15,6 @@ package BarnOwl::Module::ZStatus;
 
 our $VERSION = 0.1;
 
-my $next = undef;
-
 sub cmd_zstatus {
     my $cmd = shift;
     my $args = join(" ", @_);
@@ -53,23 +51,17 @@ sub got_data {
 
 sub got_sleep {
     my @pass = @_;
-    $next = sub {
-        BarnOwl::start_question('Angst [0-10]? ', sub {got_angst(@pass, @_)});
-    };
+    BarnOwl::start_question('Angst [0-10]? ', sub {got_angst(@pass, @_)});
 }
 
 sub got_angst {
     my @pass = @_;
-    $next = sub {
-        BarnOwl::start_question('Stress [0-10]? ', sub {got_stress(@pass, @_)});
-    }
+    BarnOwl::start_question('Stress [0-10]? ', sub {got_stress(@pass, @_)});
 }
 
 sub got_stress {
     my @pass = @_;
-    $next  = sub {
-        BarnOwl::start_question('Hosage [0-10]? ', sub {got_hosage(@pass, @_)});
-    }
+    BarnOwl::start_question('Hosage [0-10]? ', sub {got_hosage(@pass, @_)});
 }
 
 sub got_hosage {
@@ -116,14 +108,5 @@ BarnOwl::new_command(zbars => \&cmd_zbars, {
     summary => "Zephyr an arbitrary personal status dashboard",
     usage   => "zbars [zephyr command-line]",
    });
-
-sub main_loop {
-    if($next) {
-        $next->();
-        undef $next;
-    }
-}
-
-$BarnOwl::Hooks::mainLoop->add(\&main_loop);
 
 1;
